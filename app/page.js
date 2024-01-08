@@ -1,9 +1,10 @@
 "use client";
 import Logo from "@/components/logo";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Icon } from "@iconify/react";
 import { useEffect } from "react";
 import protocolDefinition from "../public/protocol/jornova.json";
+import Link from "next/link";
 
 export default function Home() {
   useEffect(() => {
@@ -48,19 +49,21 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between py-24 bg-indigo-50">
+    <main className="flex min-h-screen flex-col items-center justify-between py-24">
       <div className="max-w-4xl mx-auto px-4 w-full">
         <div className="text-center mb-12">
           <Logo className="h-7 mb-2 mx-auto" />
           <h1 className="font-bold text-2xl mb-2">
             Talk back with your journal &ndash; <span className="text-indigo-600">it listens</span>, <span className="text-amber-600">it responds</span>
           </h1>
-          <p className="mb-8 text-lg text-gray-600">Transform your journaling experience with the AI-driven guide to mental wellness and personal development.</p>
+          <p className="mb-8 text-lg text-gray-600">
+            Transform your journaling experience with the AI-driven guide to mental wellness and personal development.
+          </p>
 
-          <Button className="gap-2">
+          <Link href="/onboarding" className={buttonVariants() + " gap-2"}>
             <Icon icon="ph:pen-nib-bold" className="w-4 h-4" />
             Try For Free
-          </Button>
+          </Link>
         </div>
 
         <div className="w-full border-2 border-dashed border-indigo-100 p-6 rounded-xl">
