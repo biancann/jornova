@@ -1,0 +1,46 @@
+{
+    "protocol": "https://jornova.live",
+    "published": true,
+    "types": {
+        "profile": {
+            "schema": "https://jornova.live/schemas/profile",
+            "dataFormats": [
+                "application/json"
+            ]
+        },
+        "entry": {
+            "schema": "https://jornova.live/schemas/entry",
+            "dataFormats": [
+                "application/json"
+            ]
+        }
+    },
+    "structure": {
+        "profile": {
+            "$actions": [
+                {
+                    "who": "author",
+                    "of": "profile",
+                    "can": "read"
+                },
+                {
+                    "who": "anyone",
+                    "can": "write"
+                }
+            ]
+        },
+        "entry": {
+            "$actions": [
+                {
+                    "who": "author",
+                    "of": "entry",
+                    "can": "read"
+                },
+                {
+                    "who": "anyone",
+                    "can": "write"
+                }
+            ]
+        }
+    }
+}
