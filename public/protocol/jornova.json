@@ -8,8 +8,8 @@
                 "application/json"
             ]
         },
-        "entry": {
-            "schema": "https://jornova.live/schemas/entry",
+        "journal": {
+            "schema": "https://jornova.live/schemas/journal",
             "dataFormats": [
                 "application/json"
             ]
@@ -29,11 +29,11 @@
                 }
             ]
         },
-        "entry": {
+        "journal": {
             "$actions": [
                 {
                     "who": "author",
-                    "of": "entry",
+                    "of": "journal",
                     "can": "read"
                 },
                 {

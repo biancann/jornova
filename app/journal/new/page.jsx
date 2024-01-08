@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import protocolDefinition from "../../../public/protocol/jornova.json";
 import { Button } from "@/components/ui/button";
+import toast from "react-hot-toast";
 
 export default function Page() {
   const { messages, input, handleInputChange, handleSubmit, isLoading, setMessages } = useChat();
@@ -39,8 +40,7 @@ export default function Page() {
         {
           id: 1,
           role: "system",
-          content:
-            `You are a smart assistant that helps users to journal in more depth\n\n#User Data: I'm ${profile?.age}, ${profile?.gender}, and ${profile?.relationship}. I am ${profile?.religion}. My goal is ${profile?.goal}.\n#Rules: - Use ${profile?.support} to guide responses. Prioritize evidence-based reasoning. Cite your sources inline, not at the end.\n- Answer briefly and concisely (20-50 words)\n- You can ask more questions to get deeper context\n- Before asking, give possible solutions that you know about (only if there are any)`,
+          content: `You are a smart assistant that helps users to journal in more depth\n\n#User Data: I'm ${profile?.age}, ${profile?.gender}, and ${profile?.relationship}. I am ${profile?.religion}. My goal is ${profile?.goal}.\n#Rules: - Use ${profile?.support} to guide responses. Prioritize evidence-based reasoning. Cite your sources inline, not at the end.\n- Answer briefly and concisely (20-50 words)\n- You can ask more questions to get deeper context\n- Before asking, give possible solutions that you know about (only if there are any)`,
         },
         { id: 2, role: "assistant", content: "What's on your mind?" },
       ]);
@@ -67,8 +67,48 @@ export default function Page() {
   }, [did, web5]);
 
   const submiEntry = async () => {
-    
-  }
+    let prompt = "";
+    messages
+      .filter((o) => o.role === "user")
+      .map((i) => {
+        prompt += i.content + "\n";
+      });
+    prompt += input;
+
+    let sentiment = "neutral";
+    const response = await fetch("/api/sentiment", {
+      method: "POST",
+      body: JSON.stringify({
+        prompt: prompt,
+      }),
+    });
+
+    const json = await response.json();
+    sentiment = json?.data;
+
+    const { record } = await web5.dwn.records.create({
+      data: { "@type": "journal", author: did, title: title || "Untitled", messages: messages, date: date, mood: sentiment },
+      message: {
+        protocolPath: "journal",
+        protocol: protocolDefinition.protocol,
+        schema: protocolDefinition.types.journal.schema,
+        dataFormat: protocolDefinition.types.journal.dataFormats[0],
+      },
+    });
+
+    toast.success("Saved your journal", {
+      style: {
+        border: "1px solid #6366f1",
+        padding: "8px 12px",
+        color: "#6366f1",
+        borderRadius: "1000px",
+      },
+      iconTheme: {
+        primary: "#6366f1",
+        secondary: "#FFFFFF",
+      },
+    });
+  };
 
   return (
     <>
@@ -81,10 +121,21 @@ export default function Page() {
               <Link href="/home">
                 <Icon icon="uil:arrow-left" className="w-6 h-6" />
               </Link>
-              <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Untitled" className="w-full focus:outline-0 text-lg font-bold" />
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Untitled"
+                className="w-full focus:outline-0 text-lg font-bold"
+              />
             </div>
             <div className="flex-shrink">
-              <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="w-[6.5rem] focus:outline-0 text-sm font-medium text-gray-500" />
+              <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className="w-[6.5rem] focus:outline-0 text-sm font-medium text-gray-500"
+              />
             </div>
           </div>
           <div className="p-4">
