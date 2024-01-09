@@ -9,13 +9,16 @@ import { useEffect, useState } from "react";
 import protocolDefinition from "../../../public/protocol/jornova.json";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
+  const router = useRouter();
   const { messages, input, handleInputChange, handleSubmit, isLoading, setMessages } = useChat();
 
   const [did, setDid] = useState();
   const [web5, setWeb5] = useState();
   const [profile, setProfile] = useState();
+  const [loading, setLoading] = useState(false);
 
   const [title, setTitle] = useState();
   const [date, setDate] = useState(moment().format("YYYY-MM-DD"));
@@ -67,6 +70,8 @@ export default function Page() {
   }, [did, web5]);
 
   const submiEntry = async () => {
+    setLoading(true);
+
     let prompt = "";
     messages
       .filter((o) => o.role === "user")
@@ -76,6 +81,8 @@ export default function Page() {
     prompt += input;
 
     let sentiment = "neutral";
+    let reflection = "";
+
     const response = await fetch("/api/sentiment", {
       method: "POST",
       body: JSON.stringify({
@@ -84,10 +91,28 @@ export default function Page() {
     });
 
     const json = await response.json();
-    sentiment = json?.data;
+    sentiment = json?.data?.split(",")[0];
+
+    const getReflection = await fetch("/api/reflection", {
+      method: "POST",
+      body: JSON.stringify({
+        prompt: prompt,
+      }),
+    });
+
+    const reflectionJson = await getReflection.json();
+    reflection = reflectionJson?.data;
 
     const { record } = await web5.dwn.records.create({
-      data: { "@type": "journal", author: did, title: title || "Untitled", messages: messages.filter((o) => o.role !== "system"), date: date, mood: sentiment },
+      data: {
+        "@type": "journal",
+        author: did,
+        title: title || "Untitled",
+        messages: messages.filter((o) => o.role !== "system"),
+        date: date,
+        mood: sentiment,
+        reflection: reflection,
+      },
       message: {
         protocolPath: "journal",
         protocol: protocolDefinition.protocol,
@@ -108,6 +133,12 @@ export default function Page() {
         secondary: "#FFFFFF",
       },
     });
+
+    setLoading(false);
+
+    setTimeout(() => {
+      router.push("/home");
+    }, 500);
   };
 
   return (
@@ -127,6 +158,7 @@ export default function Page() {
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Untitled"
                 className="w-full focus:outline-0 text-lg font-bold"
+                disabled={loading || isLoading}
               />
             </div>
             <div className="flex-shrink">
@@ -135,6 +167,7 @@ export default function Page() {
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
                 className="w-[6.5rem] focus:outline-0 text-sm font-medium text-gray-500"
+                disabled={loading || isLoading}
               />
             </div>
           </div>
@@ -156,14 +189,24 @@ export default function Page() {
                 className="pr-4 py-3 w-full focus:outline-0"
                 value={input}
                 onChange={handleInputChange}
+                disabled={loading || isLoading}
               ></textarea>
 
               <div className="flex items-center justify-between border-t mt-12">
-                <Button type="submit" className="mt-4 bg-indigo-500 hover:bg-indigo-600 gap-1">
+                <Button
+                  type="submit"
+                  className="mt-4 bg-indigo-500 hover:bg-indigo-600 gap-1 disabled:cursor-not-allowed disabled:contrast-50"
+                  disabled={loading || isLoading}
+                >
                   <Icon icon="ph:diamonds-four-bold" className="w-4 h-4" />
                   Go deeper
                 </Button>
-                <Button type="button" onClick={() => submiEntry()} className="mt-4 gap-1">
+                <Button
+                  type="button"
+                  onClick={() => submiEntry()}
+                  className="mt-4 gap-1 disabled:cursor-not-allowed disabled:contrast-50"
+                  disabled={loading || isLoading}
+                >
                   <Icon icon="ph:check-bold" className="w-4 h-4" />
                   Finish Entry
                 </Button>
