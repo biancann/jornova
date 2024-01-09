@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import protocolDefinition from "../../public/protocol/jornova.json";
 import { getMood } from "@/lib/utils";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import MoodMeter from "@/components/mood-meter";
+import ChatJournal from "@/components/chat-journal";
 
 export default function Page() {
   const [did, setDid] = useState();
@@ -78,7 +80,7 @@ export default function Page() {
       <Navbar />
 
       <div className="max-w-6xl mx-auto px-4 h-full my-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           <div className="w-full rounded-lg bg-white shadow p-4 border-b-2 border-indigo-500">
             <h4 className="font-bold text-2xl mb-1">{journals.length}</h4>
             <p className="text-gray-500">Total Journal</p>
@@ -112,6 +114,26 @@ export default function Page() {
               ))}
             </div>
             <p className="text-gray-500">Last 7 Journal</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="w-full rounded-lg bg-white shadow border-b-2 border-indigo-500 aspect-square flex flex-col">
+            <div className="p-4 border-b">
+              <h4 className="font-bold text-lg">Mood Chart</h4>
+            </div>
+            <div className="p-4 flex-1">
+              <MoodMeter journals={journals} />
+            </div>
+          </div>
+
+          <div className="col-span-2 w-full rounded-lg bg-white shadow border-b-2 border-indigo-500 flex flex-col">
+            <div className="p-4 border-b">
+              <h4 className="font-bold text-lg">Chat Your Journal</h4>
+            </div>
+            <div className="flex-1">
+              <ChatJournal journals={journals} />
+            </div>
           </div>
         </div>
       </div>
