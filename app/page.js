@@ -49,7 +49,7 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between py-24">
+    <main className="flex min-h-screen flex-col items-center justify-center py-24">
       <div className="max-w-4xl mx-auto px-4 w-full">
         <div className="text-center mb-12">
           <Logo className="h-7 mb-2 mx-auto" />
@@ -70,24 +70,35 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <Icon icon="tabler:lock-star" className="w-6 h-6" />
-              <h4 className="font-bold">Privacy & data</h4>
+              <h4 className="font-bold mt-2">Privacy & data</h4>
               <p className="text-gray-500">We use web5 tech, you own your data</p>
             </div>
             <div>
+              <Icon icon="lucide:text" className="w-6 h-6" />
+              <h4 className="font-bold mt-2">Summarized</h4>
+              <p className="text-gray-500">Entries are summarized and reflected back to you</p>
+            </div>
+            <div>
+              <Icon icon="tdesign:feel-at-ease" className="w-6 h-6" />
+              <h4 className="font-bold mt-2">Know Your Feelings</h4>
+              <p className="text-gray-500">When you write, our AI can analys your feels</p>
+            </div>
+            <div>
+              <Icon icon="ri:share-fill" className="w-6 h-6" />
+              <h4 className="font-bold mt-2">Share Your Journal <span className="text-indigo-400 text-sm">(Coming Soon)</span></h4>
+              <p className="text-gray-500">Share your story with your friend or family</p>
+            </div>
+            <div>
               <Icon icon="material-symbols:markdown-outline" className="w-6 h-6" />
-              <h4 className="font-bold">Markdown</h4>
+              <h4 className="font-bold mt-2">Markdown <span className="text-indigo-400 text-sm">(Coming Soon)</span></h4>
               <p className="text-gray-500">Write in Markdown</p>
             </div>
             <div>
               <Icon icon="uil:export" className="w-6 h-6" />
-              <h4 className="font-bold">Export</h4>
+              <h4 className="font-bold mt-2">Export <span className="text-indigo-400 text-sm">(Coming Soon)</span></h4>
               <p className="text-gray-500">Export entries as JSON with Markdown</p>
             </div>
-            <div>
-              <Icon icon="lucide:text" className="w-6 h-6" />
-              <h4 className="font-bold">Summarized</h4>
-              <p className="text-gray-500">Entries are summarized and reflected back to you</p>
-            </div>
+            
           </div>
         </div>
       </div>

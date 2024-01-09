@@ -39,8 +39,8 @@ export default function Navbar() {
               pathname === "/mood" ? "border-indigo-500 text-indigo-500" : "border-transparent hover:border-gray-200"
             }`}
           >
-            <Icon icon="ph:chart-bar-bold" className="w-4 h-4" />
-            Analytics
+            <Icon icon="ri:share-fill" className="w-4 h-4" />
+            Shared
           </Link> */}
         </div>
         <div>
