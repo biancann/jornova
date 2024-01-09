@@ -87,7 +87,7 @@ export default function Page() {
     sentiment = json?.data;
 
     const { record } = await web5.dwn.records.create({
-      data: { "@type": "journal", author: did, title: title || "Untitled", messages: messages, date: date, mood: sentiment },
+      data: { "@type": "journal", author: did, title: title || "Untitled", messages: messages.filter((o) => o.role !== "system"), date: date, mood: sentiment },
       message: {
         protocolPath: "journal",
         protocol: protocolDefinition.protocol,
